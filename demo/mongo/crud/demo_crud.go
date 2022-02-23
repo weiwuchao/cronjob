@@ -141,4 +141,5 @@ func main() {
 		return
 	}
 	fmt.Println("删除数目",delResult.DeletedCount)
+
 }
