@@ -1,0 +1,6 @@
+apiReadTimeOut: 5000
+apiWriteTimeOut: 5000
+apiPort: 8070
+etcdEndpoints: ["192.168.92.129:2379"]
+etcdDialTimeOut: 5000
+
