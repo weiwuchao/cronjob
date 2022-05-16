@@ -38,6 +38,7 @@ func main(){
 	if err=apiserver.InitApiServer();err!=nil{
 		goto ERR
 	}
+
 	return
 	ERR:
 		fmt.Println(err)
