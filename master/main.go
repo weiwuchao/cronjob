@@ -7,6 +7,7 @@ import (
 	"flag"
 	"fmt"
 	"runtime"
+	"time"
 )
 
 var (
@@ -37,6 +38,10 @@ func main(){
 	//初始化httpServer
 	if err=apiserver.InitApiServer();err!=nil{
 		goto ERR
+	}
+
+	for{
+		time.Sleep(1*time.Second)
 	}
 
 	return

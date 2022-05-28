@@ -32,7 +32,7 @@ func InitApiServer() error {
 	serveMux.HandleFunc("/job/save", saveJob)
 	serveMux.HandleFunc("/job/delete", deleteJob)
 	serveMux.HandleFunc("/job/list", listJob)
-	serveMux.HandleFunc("/job/list", killJob)
+	serveMux.HandleFunc("/job/kill", killJob)
 
 	//启动tcp监听
 	if listener, err = net.Listen("tcp", ":"+strconv.Itoa(config.G_config.ApiPort)); err != nil {
@@ -161,7 +161,7 @@ func listJob(resp http.ResponseWriter, req *http.Request) {
 		bytes  []byte
 	)
 
-	//删除job从etcd
+	//查询job列表从etcd
 	if jobList, err = access.G_jobMgr.ListJob(); err != nil {
 		goto ERR
 	}
