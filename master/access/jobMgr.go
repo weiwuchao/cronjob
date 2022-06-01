@@ -74,7 +74,7 @@ func (jobMgr JobMgr) SaveJob(job *common.Job) (*common.Job, error) {
 
 	//如果是更新，返回旧值
 	if putResp.PrevKv != nil {
-		json.Unmarshal(putResp.PrevKv.Value, oldJob)
+		json.Unmarshal(putResp.PrevKv.Value, &oldJob)
 	}
 	return oldJob, err
 }
@@ -94,7 +94,7 @@ func (jobMgr JobMgr) DeleteJob(name string) (*common.Job, error) {
 
 	//如果是更新，返回旧值
 	if delResp.PrevKvs != nil && len(delResp.PrevKvs) > 0 {
-		json.Unmarshal(delResp.PrevKvs[0].Value, oldJob)
+		json.Unmarshal(delResp.PrevKvs[0].Value, &oldJob)
 	}
 	return oldJob, err
 }
