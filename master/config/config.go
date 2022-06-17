@@ -11,6 +11,7 @@ type Config struct {
 	ApiPort         int      `yaml:"apiPort"`
 	EtcdEndpoints   []string `yaml:"etcdEndpoints"`
 	EtcdDialTimeOut int      `yaml:"etcdDialTimeOut"`
+	WebPage         string   `yaml:"webPage"`
 }
 
 var (

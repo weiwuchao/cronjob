@@ -19,20 +19,29 @@ var (
 	G_apiServer ApiServer
 )
 
+/**
+  使用http中的serverMux，不支持路径参数，不支持restful(任何请求方式GET、POST都可以访问)
+ */
 func InitApiServer() error {
 
 	var (
 		listener net.Listener
 		err      error
+		staticDir http.Dir
+		staticHandler http.Handler
 	)
 
 	//配置路由
 	serveMux := http.NewServeMux()
-
 	serveMux.HandleFunc("/job/save", saveJob)
 	serveMux.HandleFunc("/job/delete", deleteJob)
 	serveMux.HandleFunc("/job/list", listJob)
 	serveMux.HandleFunc("/job/kill", killJob)
+
+	//访问静态页面
+	staticDir=http.Dir(config.G_config.WebPage)
+	staticHandler=http.FileServer(staticDir)
+	serveMux.Handle("/",http.StripPrefix("/",staticHandler))
 
 	//启动tcp监听
 	if listener, err = net.Listen("tcp", ":"+strconv.Itoa(config.G_config.ApiPort)); err != nil {
