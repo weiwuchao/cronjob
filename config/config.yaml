@@ -1,0 +1,7 @@
+apiReadTimeOut: 5000
+apiWriteTimeOut: 5000
+apiPort: 8070
+etcdEndpoints: ["192.168.92.131:2389"]
+etcdDialTimeOut: 5000
+webPage: "./src/crontab/master/webroot"
+

@@ -1,9 +1,9 @@
 package main
 
 import (
+	"crontab/config"
 	"crontab/master/access"
 	"crontab/master/apiserver"
-	"crontab/master/config"
 	"flag"
 	"fmt"
 	"runtime"
@@ -14,7 +14,7 @@ var (
 	configPath string
 )
 
-func main(){
+func main() {
 	var (
 		err error
 	)
@@ -26,33 +26,33 @@ func main(){
 	initEnv()
 
 	//初始化配置文件
-	if err=config.InitConfig(configPath);err!=nil{
+	if err = config.InitConfig(configPath); err != nil {
 		goto ERR
 	}
 
 	//初始化jobMgr(etcd)
-	if err=access.InitJobMgr();err!=nil{
+	if err = access.InitJobMgr(); err != nil {
 		goto ERR
 	}
 
 	//初始化httpServer
-	if err=apiserver.InitApiServer();err!=nil{
+	if err = apiserver.InitApiServer(); err != nil {
 		goto ERR
 	}
 
-	for{
-		time.Sleep(1*time.Second)
+	for {
+		time.Sleep(1 * time.Second)
 	}
 
 	return
-	ERR:
-		fmt.Println(err)
+ERR:
+	fmt.Println(err)
 }
 
-func initEnv(){
+func initEnv() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
-func initArgs(){
-	flag.StringVar(&configPath,"configFilePath","./src/crontab/master/config/config.yaml","配置参数路径")
+func initArgs() {
+	flag.StringVar(&configPath, "configFilePath", "./src/crontab/config/config.yaml", "配置参数路径")
 }

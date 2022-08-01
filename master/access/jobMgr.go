@@ -2,8 +2,8 @@ package access
 
 import (
 	"context"
-	"crontab/master/common"
-	"crontab/master/config"
+	"crontab/common"
+	"crontab/config"
 	"encoding/json"
 	"fmt"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -63,7 +63,7 @@ func (jobMgr JobMgr) SaveJob(job *common.Job) (*common.Job, error) {
 		putResp *clientv3.PutResponse
 		oldJob  *common.Job
 	)
-	jobKey := "/cron/jobs/" + job.Name
+	jobKey := common.JOB_PREFIX + job.Name
 	//反序列化job
 	if jobByte, err = json.Marshal(job); err != nil {
 		return nil, err
@@ -86,7 +86,7 @@ func (jobMgr JobMgr) DeleteJob(name string) (*common.Job, error) {
 		delResp *clientv3.DeleteResponse
 		oldJob  *common.Job
 	)
-	jobKey := "/cron/jobs/" + name
+	jobKey := common.JOB_PREFIX + name
 
 	if delResp, err = jobMgr.kv.Delete(context.Background(), jobKey, clientv3.WithPrevKV()); err != nil {
 		return nil, err
@@ -106,7 +106,7 @@ func (jobMgr JobMgr) ListJob() ([]*common.Job, error) {
 		getResp *clientv3.GetResponse
 		job     *common.Job
 	)
-	jobDir := "/cron/jobs/"
+	jobDir := common.JOB_PREFIX
 
 	if getResp, err = jobMgr.kv.Get(context.Background(), jobDir, clientv3.WithPrefix()); err != nil {
 		return nil, err
@@ -128,20 +128,20 @@ func (jobMgr JobMgr) ListJob() ([]*common.Job, error) {
 //杀死任务
 func (jobMgr JobMgr) KillJob(name string) error {
 	var (
-		err     error
+		err       error
 		leaseResp *clientv3.LeaseGrantResponse
 	)
-	jobKey := "/cron/killer/" + name
+	jobKey := common.JOB_KILLER_PREFIX + name
 
 	//让worker监听到一次操作即可，为了不占etcd存储，设置租约，监听到后即失效
-	if leaseResp,err=jobMgr.lease.Grant(context.Background(),1);err!=nil{
-		return  err
+	if leaseResp, err = jobMgr.lease.Grant(context.Background(), 1); err != nil {
+		return err
 	}
 
 	//租约id
-	leaseId:=leaseResp.ID
+	leaseId := leaseResp.ID
 
-	_, err = jobMgr.kv.Put(context.Background(), jobKey, "",clientv3.WithLease(leaseId))
+	_, err = jobMgr.kv.Put(context.Background(), jobKey, "", clientv3.WithLease(leaseId))
 	return err
 
 }

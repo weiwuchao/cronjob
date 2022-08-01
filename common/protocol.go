@@ -23,3 +23,17 @@ func BuildResp(code,msg string,data interface{})([]byte,error){
 	}
 	return json.Marshal(resp)
 }
+
+// 反序列化Job
+func UnpackJob(value []byte) (ret *Job, err error) {
+	var (
+		job *Job
+	)
+
+	job = &Job{}
+	if err = json.Unmarshal(value, job); err != nil {
+		return
+	}
+	ret = job
+	return
+}
